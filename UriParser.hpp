@@ -2,6 +2,10 @@
 #include <string>
 
 namespace http {
+    bool has_protocol(std::string uri) {
+        return uri.find("://") < std::string::npos;
+    }
+
     struct uri {
         std::string protocol;
         std::string authentication;
@@ -15,10 +19,18 @@ namespace http {
             // Input: 
             // Output: 
             //*******************************************************************
-            
-            int protocol_end = uri_string.find("://") + 3;
-            protocol = uri_string.substr (0, protocol_end);
 
+            int last_spot = 0;
+            int length = 0;
+
+            if (has_protocol(uri_string)) {
+                length = uri_string.find("://") + 3;
+                protocol = uri_string.substr (last_spot, length);
+            }
+
+            length = uri_string.find(":", last_spot) - last_spot;
+            host = uri_string.substr (last_spot, length);
+            last_spot = last_spot + length;
 
             return 0;
         }

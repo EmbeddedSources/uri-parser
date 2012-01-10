@@ -4,9 +4,13 @@
 int main(int argc, const char *argv[])
 {
     http::uri google;
-    google.parse_uri("http://user:password@www.google.com:80/path/to/something");
+    std::string haystack = "www.google.com:80/path/to/something";
+    google.parse_uri(haystack);
 
+    std::cout << haystack<< std::endl;
+    
     std::cout << "protocol (" << google.protocol << ")" << std::endl;
+    std::cout << "host (" << google.host << ")" << std::endl;
     
     return 0;
 }
