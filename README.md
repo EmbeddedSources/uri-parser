@@ -1,5 +1,5 @@
 # What is it?
-a little header-only library that parses URLs into bite-sized pieces.
+a little header-only c++ library that parses URLs into bite-sized pieces.
 
 ## Why another uri parsing library?
 Every other url-parsing library I could find was part of a ginormous library which I invariably couldn't build in one or two of my environments.
