@@ -3,14 +3,15 @@
 
 int main(int argc, const char *argv[])
 {
-    http::uri google;
-    std::string haystack = "www.google.com:80/path/to/something";
-    google.parse_uri(haystack);
+    if (argc != 2) {
+        return 1;
+    }
 
-    std::cout << haystack<< std::endl;
-    
-    std::cout << "protocol (" << google.protocol << ")" << std::endl;
-    std::cout << "host (" << google.host << ")" << std::endl;
-    
+    std::string haystack = argv[1];
+    string * http_parts;
+
+    http_parts = parse_http_uri(haystack);
+
+    std::cout << http_parts[0] << " " << http_parts[1] << " " << http_parts[2] << std::endl;
     return 0;
 }
