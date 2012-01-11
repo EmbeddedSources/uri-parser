@@ -1,73 +1,70 @@
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 
 using namespace std;
 
-bool has_protocol(std::string uri) {
-    return uri.find("://") < std::string::npos;
-}
+namespace http {
+    struct uri {
 
-bool has_path(std::string uri) {
-    return uri.find("/") < std::string::npos;
-}
+    };
 
+    string tail_slice(string &subject, string delimiter) {
+        // Chops off the delimiter and everything that follows (destructively)
+        // returns everything after the delimiter
+        int delimiter_location = subject.find(delimiter);
+        int delimiter_length = delimiter.length();
+        string output = subject.substr(delimiter_location + delimiter_length, subject.length() - (delimiter_location + delimiter_length));
+        subject = subject.substr(0, delimiter_location);
+        return output;
+    }
 
-string * parse_http_uri(string in) {
-    string * ret = new string[3];
-    int last_spot = 0;
-    int length = 0;
+    string extract_protocol(string &in) {
+        int length = in.find("://");
+        string protocol = in.substr(0, length);
+        in = in.substr(length + 3, in.length() - length + 3);
+        return protocol;
+    }
+
+    string extract_userpass(string &in) {
+        int length = in.find("@");
+        string user = in.substr(0, length);
+        in = in.substr(length + 1, in.length() - length + 1);
+        return user;
+    }
+
+    int extract_port(string &hostport) {
+        int colon_location = hostport.find(":");
+        int port;
+        string portstring = hostport.substr(colon_location + 1, hostport.length() - colon_location + 1);
+        try {
+           port  = atoi(portstring.c_str());
+        }
+        catch (std::exception e) {
+           port = 80;
+        }
+
+        hostport = hostport.substr(0, colon_location);
+        return port;
+    }
+
+    string extract_user(string &userpass) {
+        int colon_location = userpass.find(":");
+        string user = userpass.substr(0, colon_location);
+        userpass = userpass.substr(colon_location + 1, userpass.length() - colon_location + 1);
+        return user;
+    }
     
-    if (has_protocol(in)) {
-        length = in.find("://") + 3;
-        ret[0] = in.substr (last_spot, length);
-        last_spot += length;
+    string extract_search(string &in) {
+        return tail_slice(in, "?");
     }
 
-    if (has_path(in)) {
-        length = in.find("/", last_spot) - last_spot;
-        ret[1] = in.substr (last_spot, length);
-        last_spot += length;
-        ret[2] = in.substr (last_spot, in.length() - last_spot);
-    } else {
-        ret[1] = in.substr (last_spot, in.length() - last_spot);
+    string extract_path(string &in) {
+        return tail_slice(in, "/");
     }
 
-    return ret;
+
+
+
 }
-
-//namespace http {
-    //bool has_protocol(std::string uri) {
-        //return uri.find("://") < std::string::npos;
-    //}
-
-    //struct uri {
-        //std::string protocol;
-        //std::string authentication;
-        //std::string host;
-        //int port;
-        //std::string path;
-
-        //bool parse_uri(std::string uri_string) {
-            ////*******************************************************************
-            //// Purpose: Split the uri atom into its consituent quarks
-            //// Input: 
-            //// Output: 
-            ////*******************************************************************
-
-            //int last_spot = 0;
-            //int length = 0;
-
-            //if (has_protocol(uri_string)) {
-                //length = uri_string.find("://") + 3;
-                //protocol = uri_string.substr (last_spot, length);
-            //}
-
-            //length = uri_string.find(":", last_spot) - last_spot;
-            //host = uri_string.substr (last_spot, length);
-            //last_spot = last_spot + length;
-
-            //return 0;
-        //}
-    //};
-//}

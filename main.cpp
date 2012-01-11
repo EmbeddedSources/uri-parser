@@ -7,11 +7,28 @@ int main(int argc, const char *argv[])
         return 1;
     }
 
-    std::string haystack = argv[1];
-    string * http_parts;
+    string haystack = argv[1];
 
-    http_parts = parse_http_uri(haystack);
+    string protocol = http::extract_protocol(haystack);
+    string search = http::extract_search(haystack);
+    string path = http::extract_path(haystack);
+    string userpass = http::extract_userpass(haystack);
+    string user = http::extract_user(userpass);
+    string password = userpass;
+    int port = http::extract_port(haystack);
+    string host = haystack;
 
-    std::cout << http_parts[0] << " " << http_parts[1] << " " << http_parts[2] << std::endl;
+
+    for (int i = 0; i < 1; i++) {
+        std::cout << protocol << " "
+                  << user << " "
+                  << password << " "
+                  << host << " "
+                  << port << " "
+                  << path << " "
+                  << search
+                  << std::endl;
+    }
+
     return 0;
 }
