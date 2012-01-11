@@ -3,8 +3,6 @@
 #include <stdlib.h>
 
 
-using namespace std;
-
 namespace http {
     struct url {
         std::string protocol, user, password, host, path, search;
@@ -48,7 +46,7 @@ namespace http {
         int port;
         std::string portstring = tail_slice(hostport, ":");
         try { port = atoi(portstring.c_str()); }
-        catch (exception e) { port = -1; }
+        catch (std::exception e) { port = -1; }
         return port;
     }
 
